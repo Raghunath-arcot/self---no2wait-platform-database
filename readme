@@ -1,1 +1,79 @@
 
+```sql
+-- DATABASE
+CREATE DATABASE n2w_db;
+
+-- CONNECT
+\c n2w_db;
+
+-- SCHEMA (optional if using public)
+CREATE SCHEMA IF NOT EXISTS public;
+
+-- AUTHOR
+INSERT INTO authors (id, name, email)
+VALUES ('6a582b6e-dcf1-4b0a-b0d4-9da7f211640b', 'Admin Author', 'admin@n2w.dev');
+
+-- SUBJECT
+INSERT INTO subjects (name)
+VALUES ('Java');
+
+INSERT INTO subjects (name)
+VALUES ('Spring Boot');
+
+-- CATEGORY
+INSERT INTO categories (name, subject_id)
+VALUES ('Core Java', 1);
+
+INSERT INTO categories (name, subject_id)
+VALUES ('Collections', 1);
+
+-- QUESTION
+INSERT INTO questions (
+  question_text,
+  difficulty,
+  mixed,
+  subject_id,
+  category_id,
+  author_id
+) VALUES (
+  'What is JVM?',
+  'EASY',
+  true,
+  1,
+  NULL,
+  '6a582b6e-dcf1-4b0a-b0d4-9da7f211640b'
+);
+
+-- OPTIONS
+INSERT INTO options (option_text, correct, question_id)
+VALUES ('Java Virtual Machine', true, 1);
+
+INSERT INTO options (option_text, correct, question_id)
+VALUES ('Java Vendor Machine', false, 1);
+
+INSERT INTO options (option_text, correct, question_id)
+VALUES ('Java Variable Method', false, 1);
+
+INSERT INTO options (option_text, correct, question_id)
+VALUES ('None of the above', false, 1);
+
+-- DELETE DATA ONLY (RESET)
+DELETE FROM options;
+DELETE FROM questions;
+DELETE FROM categories;
+DELETE FROM subjects;
+DELETE FROM authors;
+
+-- RESET SEQUENCES (POSTGRES)
+ALTER SEQUENCE subjects_id_seq RESTART WITH 1;
+ALTER SEQUENCE categories_id_seq RESTART WITH 1;
+ALTER SEQUENCE questions_id_seq RESTART WITH 1;
+ALTER SEQUENCE options_id_seq RESTART WITH 1;
+
+-- VERIFY
+SELECT * FROM authors;
+SELECT * FROM subjects;
+SELECT * FROM categories;
+SELECT * FROM questions;
+SELECT * FROM options;
+```
