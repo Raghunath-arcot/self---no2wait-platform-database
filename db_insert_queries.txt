@@ -1,0 +1,138 @@
+✅ Suggested Hierarchy
+
+Here’s a sample:
+
+Subject	Categories	Subcategories
+Physics	Mechanics, Thermodynamics, Optics	Newtonian, Kinematics, Heat Transfer, Light Waves
+Computer Science	Programming, Databases, Networking	Java, Python, SQL, MongoDB, TCP/IP
+Biology	Zoology, Botany, Genetics	Animals, Plants, DNA, Evolution
+Mathematics	Algebra, Calculus, Geometry	Linear, Differential, Trigonometry, Euclidean
+Programming Languages	Java, Python, C++	Basics, Advanced, OOP, Data Structures
+🔹 SQL Insert Queries
+1️⃣ Insert Subjects
+INSERT INTO subjects (name) VALUES
+('Physics'),
+('Computer Science'),
+('Biology'),
+('Mathematics'),
+('Programming Languages');
+
+2️⃣ Insert Categories (linked to subjects)
+
+Assuming subjects.id starts from 1 in order inserted above:
+
+-- Physics (id = 1)
+INSERT INTO categories (subject_id, name) VALUES
+(1, 'Mechanics'),
+(1, 'Thermodynamics'),
+(1, 'Optics');
+
+-- Computer Science (id = 2)
+INSERT INTO categories (subject_id, name) VALUES
+(2, 'Programming'),
+(2, 'Databases'),
+(2, 'Networking');
+
+-- Biology (id = 3)
+INSERT INTO categories (subject_id, name) VALUES
+(3, 'Zoology'),
+(3, 'Botany'),
+(3, 'Genetics');
+
+-- Mathematics (id = 4)
+INSERT INTO categories (subject_id, name) VALUES
+(4, 'Algebra'),
+(4, 'Calculus'),
+(4, 'Geometry');
+
+-- Programming Languages (id = 5)
+INSERT INTO categories (subject_id, name) VALUES
+(5, 'Java'),
+(5, 'Python'),
+(5, 'C++');
+
+3️⃣ Insert Subcategories (linked to categories)
+
+Assuming categories.id increments sequentially:
+
+-- Physics → Mechanics (category_id = 1)
+INSERT INTO subcategories (category_id, name) VALUES
+(1, 'Newtonian'),
+(1, 'Kinematics');
+
+-- Physics → Thermodynamics (category_id = 2)
+INSERT INTO subcategories (category_id, name) VALUES
+(2, 'Heat Transfer'),
+(2, 'Laws of Thermodynamics');
+
+-- Physics → Optics (category_id = 3)
+INSERT INTO subcategories (category_id, name) VALUES
+(3, 'Light Waves'),
+(3, 'Optical Instruments');
+
+-- Computer Science → Programming (category_id = 4)
+INSERT INTO subcategories (category_id, name) VALUES
+(4, 'Java'),
+(4, 'Python');
+
+-- Computer Science → Databases (category_id = 5)
+INSERT INTO subcategories (category_id, name) VALUES
+(5, 'SQL'),
+(5, 'MongoDB');
+
+-- Computer Science → Networking (category_id = 6)
+INSERT INTO subcategories (category_id, name) VALUES
+(6, 'TCP/IP'),
+(6, 'HTTP/HTTPS');
+
+-- Biology → Zoology (category_id = 7)
+INSERT INTO subcategories (category_id, name) VALUES
+(7, 'Animals'),
+(7, 'Human Anatomy');
+
+-- Biology → Botany (category_id = 8)
+INSERT INTO subcategories (category_id, name) VALUES
+(8, 'Plants'),
+(8, 'Photosynthesis');
+
+-- Biology → Genetics (category_id = 9)
+INSERT INTO subcategories (category_id, name) VALUES
+(9, 'DNA'),
+(9, 'Evolution');
+
+-- Mathematics → Algebra (category_id = 10)
+INSERT INTO subcategories (category_id, name) VALUES
+(10, 'Linear'),
+(10, 'Quadratic');
+
+-- Mathematics → Calculus (category_id = 11)
+INSERT INTO subcategories (category_id, name) VALUES
+(11, 'Differential'),
+(11, 'Integral');
+
+-- Mathematics → Geometry (category_id = 12)
+INSERT INTO subcategories (category_id, name) VALUES
+(12, 'Trigonometry'),
+(12, 'Euclidean');
+
+-- Programming Languages → Java (category_id = 13)
+INSERT INTO subcategories (category_id, name) VALUES
+(13, 'Basics'),
+(13, 'OOP');
+
+-- Programming Languages → Python (category_id = 14)
+INSERT INTO subcategories (category_id, name) VALUES
+(14, 'Basics'),
+(14, 'Advanced');
+
+-- Programming Languages → C++ (category_id = 15)
+INSERT INTO subcategories (category_id, name) VALUES
+(15, 'Basics'),
+(15, 'Data Structures');
+
+
+⚡ Notes:
+
+Adjust subject_id and category_id according to your DB.
+
+These are examples; admin can insert more later.
