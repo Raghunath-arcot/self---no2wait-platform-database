@@ -1,0 +1,119 @@
+
+DATABASE MIGRATION DOCUMENT
+===========================
+
+CURRENT STATE (AS-IS)
+--------------------
+Tables present:
+- authors
+- subjects
+- categories
+- questions
+- options
+
+Problems in current schema:
+1. No `subcategories` table
+2. `questions.sub_category` is VARCHAR (text-based, error-prone)
+3. No foreign key enforcement between questions -> subcategories
+4. UI dropdown requirement needs normalized data
+
+--------------------------------------------------
+
+OLD (WRONG / INITIAL APPROACH)
+------------------------------
+These were used earlier but are NOT recommended now because tables already exist:
+
+CREATE TABLE subjects (...);
+CREATE TABLE categories (...);
+CREATE TABLE subcategories (...);
+CREATE TABLE questions (...);
+
+Why wrong:
+- Causes: ERROR: relation already exists
+- Dangerous in production
+- Can wipe or conflict with existing data
+
+--------------------------------------------------
+
+NEW (CORRECT / SAFE APPROACH)
+----------------------------
+
+STEP 1: Create subcategories table (missing)
+--------------------------------------------
+CREATE TABLE subcategories (
+    id BIGSERIAL PRIMARY KEY,
+    category_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_subcategory_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(id)
+        ON DELETE CASCADE
+);
+
+Why:
+- Normalized structure
+- Enables dropdowns
+- Admin-controlled taxonomy
+
+--------------------------------------------------
+
+STEP 2: Fix questions table (normalize subcategory)
+---------------------------------------------------
+
+-- Remove text column
+ALTER TABLE questions
+DROP COLUMN IF EXISTS sub_category;
+
+-- Add FK column
+ALTER TABLE questions
+ADD COLUMN subcategory_id BIGINT;
+
+ALTER TABLE questions
+ADD CONSTRAINT fk_question_subcategory
+FOREIGN KEY (subcategory_id)
+REFERENCES subcategories(id);
+
+Why:
+- Prevents invalid subcategory values
+- Enforces relational integrity
+- Required for dropdown-based UI
+
+--------------------------------------------------
+
+STEP 3: (Optional) Enforce category-subject relationship
+---------------------------------------------------------
+ALTER TABLE categories
+ADD CONSTRAINT fk_category_subject
+FOREIGN KEY (subject_id)
+REFERENCES subjects(id)
+ON DELETE CASCADE;
+
+--------------------------------------------------
+
+FINAL DATA FLOW (IMPORTANT)
+---------------------------
+Admin:
+subjects -> categories -> subcategories
+
+Author:
+Select ONLY from dropdowns
+
+Stored in DB:
+questions.subject_id
+questions.category_id
+questions.subcategory_id
+
+NO free text storage anymore.
+
+--------------------------------------------------
+
+BENEFITS
+--------
+- Clean schema
+- No duplicate categories
+- UI dropdowns become trivial
+- Scalable & production-safe
+- Matches real EdTech systems
+
+--------------------------------------------------
+END OF DOCUMENT
