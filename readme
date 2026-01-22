@@ -1,3 +1,5 @@
+
+
 -- DATABASE
 CREATE DATABASE n2w_db;
 
@@ -75,3 +77,42 @@ SELECT * FROM categories;
 SELECT * FROM questions;
 SELECT * FROM options;
 ```
+
+
+
+=====
+✅ 1.1 Database Tables (NEW)
+subjects
+CREATE TABLE subjects (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL
+);
+
+categories
+CREATE TABLE categories (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  subject_id BIGINT NOT NULL,
+  CONSTRAINT fk_category_subject
+    FOREIGN KEY (subject_id) REFERENCES subjects(id)
+    ON DELETE CASCADE,
+  UNIQUE (name, subject_id)
+);
+
+subcategories
+CREATE TABLE subcategories (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  category_id BIGINT NOT NULL,
+  CONSTRAINT fk_subcategory_category
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+    ON DELETE CASCADE,
+  UNIQUE (name, category_id)
+);
+
+✅ 1.2 Update questions table (IMPORTANT)
+ALTER TABLE questions
+ADD COLUMN subcategory_id BIGINT NOT NULL,
+ADD CONSTRAINT fk_question_subcategory
+  FOREIGN KEY (subcategory_id)
+  REFERENCES subcategories(id);
