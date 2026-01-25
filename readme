@@ -3,7 +3,7 @@
 DATABASE
 CREATE DATABASE n2w_db;
 
--- CONNECT
+CONNECT
 \c n2w_db;
 
 -- SCHEMA (optional if using public)
