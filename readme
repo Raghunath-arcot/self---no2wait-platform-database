@@ -1,7 +1,9 @@
 navbar items called primary navigation entity or Top-level Navigation Items
 For Authors (Target: Content creators, SMEs, trainers) --> Create Questions, Build Assessments, Manage Subjects & Categories, Review Submissions, Earnings & Analytics
 For Learners (Target: Students, Professionals) --> Explore Tests, Upskilling, One vs One, Performance Insights, Learning Paths
-
+Hire Talent --> Assess Candidates, Skill-Based Hiring, Company Dashboards, Campus Hiring, AI Evaluation Reports
+Managed Services (MGD) --> Technology Services, Functional Services, Finance Services, Proctoring Services, Custom Talent Programs
+Product & Updates --> New Features, Product Roadmap, Release Notes, Case Studies, Blog / Insights
 
 DATABASE
 CREATE DATABASE n2w_db;
