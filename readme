@@ -11,7 +11,7 @@ CREATE DATABASE n2w_db;
 CONNECT
 \c n2w_db;
 
--- SCHEMA (optional if using public)
+SCHEMA (optional if using public)
 CREATE SCHEMA IF NOT EXISTS public;
 
 -- AUTHOR
