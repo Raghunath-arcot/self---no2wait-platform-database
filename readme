@@ -14,7 +14,7 @@ CONNECT
 SCHEMA (optional if using public)
 CREATE SCHEMA IF NOT EXISTS public;
 
--- AUTHOR
+AUTHOR
 INSERT INTO authors (id, name, email)
 VALUES ('6a582b6e-dcf1-4b0a-b0d4-9da7f211640b', 'Admin Author', 'admin@n2w.dev');
 
