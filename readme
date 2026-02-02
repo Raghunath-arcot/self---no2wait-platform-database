@@ -25,7 +25,7 @@ VALUES ('Java');
 INSERT INTO subjects (name)
 VALUES ('Spring Boot');
 
--- CATEGORY
+CATEGORY
 INSERT INTO categories (name, subject_id)
 VALUES ('Core Java', 1);
 
