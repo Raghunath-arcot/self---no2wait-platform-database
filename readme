@@ -32,7 +32,7 @@ VALUES ('Core Java', 1);
 INSERT INTO categories (name, subject_id)
 VALUES ('Collections', 1);
 
--- QUESTION
+QUESTION
 INSERT INTO questions (
   question_text,
   difficulty,
