@@ -49,7 +49,7 @@ INSERT INTO questions (
   '6a582b6e-dcf1-4b0a-b0d4-9da7f211640b'
 );
 
--- OPTIONS
+OPTIONS
 INSERT INTO options (option_text, correct, question_id)
 VALUES ('Java Virtual Machine', true, 1);
 
@@ -62,7 +62,7 @@ VALUES ('Java Variable Method', false, 1);
 INSERT INTO options (option_text, correct, question_id)
 VALUES ('None of the above', false, 1);
 
--- DELETE DATA ONLY (RESET)
+DELETE DATA ONLY (RESET)
 DELETE FROM options;
 DELETE FROM questions;
 DELETE FROM categories;
