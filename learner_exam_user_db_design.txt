@@ -1,1 +1,243 @@
+Perfect, this is **very well thought out** 👍
+You’re doing this exactly like a real product migration doc — nice.
+
+I’ll **only design NEW tables** for **learner_user**, **without touching or altering** any existing author / subject / question tables.
+Everything below is **safe to run in pgAdmin**.
+
+---
+
+# 🎯 Learner (exam_user) – DB Design
+
+**Aligned with your Author design philosophy**
+
+You already have:
+
+* `authors` → content creators
+* taxonomy tables → subjects / categories / subcategories
+* questions / options
+
+Now we add **learner-side identity + tracking**, nothing invasive.
+
+---
+
+## ✅ Learner Registration Requirements (Confirmed)
+
+From your form:
+
+✔ full name
+✔ email
+✔ education level (dropdown)
+✔ experience
+✔ current skill
+✔ target skill
+✔ password
+
+👉 This maps cleanly to **ONE core table + optional reference tables**
+
+---
+
+# 🗄️ TABLE 1: `exam_users` (MAIN TABLE)
+
+This mirrors how `authors` is designed:
+
+* simple
+* UUID
+* auth-focused
+* extensible
+
+```sql
+CREATE TABLE exam_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    -- BASIC INFO
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+
+    -- AUTH
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(30) NOT NULL DEFAULT 'EXAM_USER',
+
+    -- EDUCATION & EXPERIENCE
+    education_level VARCHAR(50) NOT NULL,
+    experience_years INT NOT NULL DEFAULT 0,
+
+    -- SKILLS (TEXT for now, normalized later if needed)
+    current_skill VARCHAR(100) NOT NULL,
+    target_skill VARCHAR(100) NOT NULL,
+
+    -- STATUS
+    is_email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+
+    -- META
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 🔍 Why this design works
+
+* Matches `authors` (UUID, timestamps, role)
+* No FK yet → simple registration
+* Skills are **VARCHAR**, not FK (low friction)
+* Future-safe (can normalize later)
+
+---
+
+## ✅ INDEX (IMPORTANT for login)
+
+```sql
+CREATE INDEX idx_exam_users_email ON exam_users(email);
+```
+
+---
+
+# 🧩 OPTIONAL (BUT HIGHLY RECOMMENDED) LOOKUP TABLES
+
+These help dropdowns stay **consistent**.
+
+---
+
+## 🧾 TABLE 2: `education_levels`
+
+```sql
+CREATE TABLE education_levels (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+```
+
+### Seed data
+
+```sql
+INSERT INTO education_levels (name) VALUES
+('High School'),
+('Graduate'),
+('Post Graduate'),
+('Self Learner'),
+('Working Professional'),
+('Other');
+```
+
+👉 In backend you can:
+
+* Either store `education_level` as TEXT
+* OR validate against this table
+
+(No FK enforced yet — flexible)
+
+---
+
+## 🧾 TABLE 3 (OPTIONAL): `skills_master`
+
+*(For autocomplete later)*
+
+```sql
+CREATE TABLE skills_master (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+```
+
+Example seed:
+
+```sql
+INSERT INTO skills_master (name) VALUES
+('Java'),
+('Spring Boot'),
+('Python'),
+('Data Structures'),
+('SQL'),
+('React'),
+('System Design');
+```
+
+---
+
+# 🔐 LOGIN STRATEGY (VERY IMPORTANT)
+
+You now have **TWO user types**:
+
+| Table      | Role      |
+| ---------- | --------- |
+| authors    | AUTHOR    |
+| exam_users | EXAM_USER |
+
+### Login Flow (no DB change required)
+
+1. Check email in `authors`
+2. If not found → check `exam_users`
+3. Return:
+
+```json
+{
+  "success": true,
+  "roles": ["AUTHOR"] OR ["EXAM_USER"]
+}
+```
+
+This matches your **frontend normalization logic** already 🔥
+
+---
+
+# 👀 READ-ONLY ACCESS (Learner UI requirement)
+
+> learner_user must see subjects, categories, questions, options, answers, author name
+
+✅ **NO new tables required**
+
+Learner will read from:
+
+* `subjects`
+* `categories`
+* `subcategories`
+* `questions`
+* `options`
+* `authors`
+
+👉 This is **correct separation of concerns**
+
+---
+
+# 🚫 What we are NOT doing (intentionally)
+
+❌ Altering `questions`
+❌ Adding learner FK into questions
+❌ Mixing learner & author tables
+❌ Premature normalization
+
+---
+
+# 🧠 FUTURE TABLES (NOT NOW, just FYI)
+
+When ready, you’ll add:
+
+* `exam_attempts`
+* `exam_attempt_answers`
+* `learner_progress`
+* `performance_reports`
+
+But **NOT during registration phase**.
+
+---
+
+# ✅ FINAL CHECKLIST (Safe to Execute in pgAdmin)
+
+Run in this order:
+
+1️⃣ `exam_users`
+2️⃣ index on email
+3️⃣ (optional) `education_levels`
+4️⃣ (optional) `skills_master`
+
+---
+
+If you want next, I can:
+
+* Write **Spring Boot Entity + Repository** for `exam_users`
+* Modify **login API** to support both roles cleanly
+* Design **learner dashboard data model**
+* Design **exam_attempt tables** (most important next)
+
+Just say 👉 **Backend / Login / Attempts / Dashboard next** 🚀
 
