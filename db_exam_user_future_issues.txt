@@ -1,0 +1,32 @@
+3️⃣ ❌ What this line means (VERY IMPORTANT)
+
+❌ Use AuthorEntity + authors table to store EXAM_USER
+
+Why this is a warning, not an error
+
+You are intentionally doing this:
+
+authors table
+ ├── AUTHOR
+ └── EXAM_USER
+
+This is called:
+
+Single Table Inheritance (Role-based users)
+
+✔ This is GOOD for:
+
+Early stage products
+
+MVPs
+
+Platforms like yours
+
+❌ It becomes a problem ONLY IF:
+
+EXAM_USER has completely different fields
+
+Or millions of users + performance issues
+
+👉 For now: THIS IS 100% CORRECT
+
