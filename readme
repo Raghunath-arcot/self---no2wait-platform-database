@@ -81,7 +81,7 @@ SELECT * FROM subjects;
 SELECT * FROM categories;
 SELECT * FROM questions;
 SELECT * FROM options;
-```
+
 
 
 
