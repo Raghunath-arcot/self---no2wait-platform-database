@@ -4,7 +4,7 @@ You’re doing this exactly like a real product migration doc — nice.
 I’ll **only design NEW tables** for **learner_user**, **without touching or altering** any existing author / subject / question tables.
 Everything below is **safe to run in pgAdmin**.
 
----
+
 
 # 🎯 Learner (exam_user) – DB Design
 
