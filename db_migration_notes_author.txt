@@ -17,7 +17,7 @@ Problems in current schema:
 3. No foreign key enforcement between questions -> subcategories
 4. UI dropdown requirement needs normalized data
 
---------------------------------------------------
+
 
 OLD (WRONG / INITIAL APPROACH)
 ------------------------------
