@@ -1,0 +1,247 @@
+Perfect — this tells us **exactly** what is wrong.
+
+Your frontend is blank because your backend is returning a **cyclic JSON structure**.
+
+Look at your response:
+
+```
+question
+  → options
+      → question
+          → options
+              → question
+                  → options
+                      → question
+                          → ...
+```
+
+It keeps nesting infinitely.
+
+That’s why:
+
+* Browser freezes
+* React renders nothing
+* Page becomes blank
+* Network tab shows huge 108KB JSON
+
+This is a **classic JPA bidirectional relationship infinite recursion problem**.
+
+---
+
+# 🎯 Why This Happens
+
+You have something like:
+
+```java
+class Question {
+    @OneToMany(mappedBy = "question")
+    List<Option> options;
+}
+
+class Option {
+    @ManyToOne
+    Question question;
+}
+```
+
+When Jackson serializes:
+
+Question → options → question → options → question → options → ...
+
+Infinite loop.
+
+---
+
+# ✅ Correct Fix (Backend Only — No Frontend Changes Needed)
+
+You must break the JSON recursion.
+
+---
+
+# ✅ OPTION 1 (Quickest Fix)
+
+In `OptionEntity` add:
+
+```java
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@ManyToOne
+@JoinColumn(name = "question_id")
+@JsonIgnore
+private QuestionEntity question;
+```
+
+That stops:
+
+```
+option → question → options → question
+```
+
+Now your JSON becomes:
+
+```
+Question
+   options [
+       { id, optionText, correct }
+   ]
+```
+
+Clean. No recursion.
+
+---
+
+# ✅ OPTION 2 (Better Production Way)
+
+Instead of returning entities directly,
+use DTOs.
+
+You already defined in frontend:
+
+```ts
+export interface Question {
+  id: string;
+  questionText: string;
+  options: QuestionOption[];
+}
+```
+
+So backend should return:
+
+```json
+[
+  {
+    "id": "...",
+    "questionText": "...",
+    "options": [
+      { "id": "...", "text": "..." }
+    ]
+  }
+]
+```
+
+NOT entire author object
+NOT password
+NOT nested objects
+NOT difficulty
+NOT category
+
+Right now your backend is exposing:
+
+* Author password (!!)
+* Internal fields
+* Entire nested object graph
+
+That is dangerous.
+
+---
+
+# 🔥 Why Page Is Blank
+
+React probably expects:
+
+```ts
+option.text
+```
+
+But backend is sending:
+
+```json
+optionText
+```
+
+Also:
+
+```json
+options[].question.options.question.options...
+```
+
+So your UI breaks during render.
+
+---
+
+# 🚀 What You Should Do RIGHT NOW
+
+### 1️⃣ Go to `OptionEntity`
+
+Add:
+
+```java
+@JsonIgnore
+private QuestionEntity question;
+```
+
+### 2️⃣ Restart backend
+
+### 3️⃣ Refresh page
+
+Your page will immediately work.
+
+---
+
+# 🔥 Then Next Step (Important)
+
+Create proper DTO:
+
+```java
+public record QuestionResponse(
+    UUID id,
+    String questionText,
+    List<OptionResponse> options
+) {}
+
+public record OptionResponse(
+    UUID id,
+    String text
+) {}
+```
+
+And map manually in service.
+
+That will:
+
+* Remove infinite nesting
+* Remove password leak
+* Reduce JSON size
+* Improve performance
+* Make frontend stable
+
+---
+
+# ⚠️ CRITICAL SECURITY ISSUE
+
+Your response currently includes:
+
+```json
+"password": "$2a$10$..."
+```
+
+You are exposing hashed passwords in API response.
+
+This is a serious security flaw.
+
+Even hashed passwords must NEVER be returned.
+
+---
+
+# 🎯 Summary
+
+Blank page reason:
+✔ Infinite JSON recursion
+✔ Huge nested response
+✔ React crashes
+
+Frontend change needed?
+❌ NO
+
+Backend fix needed?
+✔ Add @JsonIgnore on Option → Question
+✔ Or use DTO (recommended)
+
+---
+
+If you want, send:
+
+* QuestionEntity
+* OptionEntity
+
+I’ll give you exact clean production-ready version.
