@@ -1,0 +1,200 @@
+Good — this error has **nothing to do with frontend anymore**.
+
+Your frontend is completely fine.
+
+This error is **100% backend + database design issue**.
+
+---
+
+# 🚨 Why You’re Getting This Error
+
+```
+violates foreign key constraint "fk_exam_user"
+Key (exam_user_id) = (ad5ab46b-c082-4d7d-99b2-3707fa87f659)
+is not present in table "exam_users"
+```
+
+That means:
+
+👉 You are inserting into `exam_attempts`
+👉 `exam_attempts.exam_user_id` has a FK to `exam_users.id`
+👉 But that UUID does NOT exist in `exam_users` table
+
+---
+
+# 🔥 Why It Happens In Option 1
+
+In Option 1 we did this:
+
+```java
+UUID userId = UUID.randomUUID();
+```
+
+That creates a completely new UUID every time.
+
+But your database expects:
+
+```
+exam_attempts.exam_user_id
+→ must exist inside exam_users.id
+```
+
+Since you never inserted that UUID into `exam_users`, Postgres blocks it.
+
+Correct behavior from DB.
+
+---
+
+# ✅ You Have 2 Proper Fixes
+
+---
+
+# ✅ FIX A (Quickest for Development)
+
+Remove the foreign key constraint.
+
+If you don’t actually need `exam_users` table, then:
+
+### Run this in PostgreSQL:
+
+```sql
+ALTER TABLE exam_attempts
+DROP CONSTRAINT fk_exam_user;
+```
+
+Now your hardcoded UUID will work.
+
+✔ Good for dev
+❌ Not correct for production
+
+---
+
+# ✅ FIX B (Correct Fix – Recommended)
+
+If you already have a real `User` table (which you do for login),
+
+Then your `ExamAttempt` should reference that user table instead of `exam_users`.
+
+Right now your DB structure probably looks like:
+
+```
+exam_users (id)
+exam_attempts (exam_user_id FK → exam_users.id)
+```
+
+But you are using authentication users from:
+
+```
+users (id)
+```
+
+These are different tables.
+
+---
+
+# 🎯 What You Should Do (Best Solution)
+
+### 1️⃣ Delete `exam_users` table completely
+
+```sql
+DROP TABLE exam_users;
+```
+
+### 2️⃣ Remove foreign key from `exam_attempts`
+
+```sql
+ALTER TABLE exam_attempts
+DROP CONSTRAINT fk_exam_user;
+```
+
+### 3️⃣ Make exam_attempt store user UUID only
+
+In `ExamAttempt` entity:
+
+```java
+@Column(name = "exam_user_id", nullable = false)
+private UUID examUserId;
+```
+
+No `@ManyToOne`.
+No FK.
+Just store UUID.
+
+---
+
+# ✅ OR (Even More Correct)
+
+If you want real relational mapping:
+
+Change `ExamAttempt`:
+
+```java
+@ManyToOne
+@JoinColumn(name = "user_id", nullable = false)
+private User user;
+```
+
+Then in service:
+
+```java
+User user = userRepository.findById(userId)
+        .orElseThrow();
+
+attempt.setUser(user);
+```
+
+That is the proper production way.
+
+---
+
+# 🧠 Important
+
+Your frontend DOES NOT need any changes.
+
+Your axios is correct.
+Your payload is correct.
+Your JWT setup is fine.
+
+The issue is strictly:
+
+```
+Database foreign key pointing to wrong table
+```
+
+---
+
+# 💡 My Recommendation For You (As You’re Building Exam Platform)
+
+Since you're already implementing JWT properly:
+
+👉 Use FIX B (real user relationship)
+👉 Remove exam_users table entirely
+👉 Link ExamAttempt to your actual User entity
+
+That keeps architecture clean.
+
+---
+
+# ⚠️ Why This Happened
+
+You earlier had:
+
+* Anonymous user
+* Random UUID
+* Separate exam_users table
+
+Now you introduced real authentication,
+but DB schema still expects old fake users.
+
+That mismatch causes this error.
+
+---
+
+# 🚀 Tell Me
+
+Do you want:
+
+1. Quick dev fix (drop FK)
+2. Clean production fix (proper user mapping)
+
+I’ll give exact code for whichever you choose.
