@@ -1,0 +1,322 @@
+Perfect ✅ — we’ll do this the **correct production way**.
+
+You currently have:
+
+* Public backend
+* No JWT filter
+* No authentication provider
+* SecurityContext always anonymous
+
+We’re going to implement:
+
+1. ✅ JWT generation on login
+2. ✅ JWT filter
+3. ✅ Secure endpoints
+4. ✅ Axios interceptor with Bearer token
+5. ✅ Real authenticated user inside `SecurityContextHolder`
+
+---
+
+# ✅ STEP 1 — Add JWT Dependency
+
+In `pom.xml` add:
+
+```xml
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+---
+
+# ✅ STEP 2 — Create JwtUtil
+
+Create:
+
+`config/JwtUtil.java`
+
+```java
+package dev.no2wait.n2w_backend.config;
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.UUID;
+
+@Component
+public class JwtUtil {
+
+    private final String SECRET =
+            "supersecretkeysupersecretkeysupersecretkey12345";
+
+    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+
+    public String generateToken(UUID userId, String email) {
+        return Jwts.builder()
+                .setSubject(userId.toString())
+                .claim("email", email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public UUID extractUserId(String token) {
+        String subject = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
+        return UUID.fromString(subject);
+    }
+}
+```
+
+---
+
+# ✅ STEP 3 — Create JWT Filter
+
+Create:
+
+`config/JwtFilter.java`
+
+```java
+package dev.no2wait.n2w_backend.config;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+public class JwtFilter extends OncePerRequestFilter {
+
+    private final JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+
+            String token = header.substring(7);
+            UUID userId = jwtUtil.extractUserId(token);
+
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(
+                            userId,
+                            null,
+                            Collections.emptyList()
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+---
+
+# ✅ STEP 4 — Update SecurityConfig
+
+Replace your SecurityConfig with:
+
+```java
+package dev.no2wait.n2w_backend.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+```
+
+Now:
+
+* `/api/auth/**` is public
+* Everything else requires JWT
+
+---
+
+# ✅ STEP 5 — Modify Login to Return Token
+
+Inside your login service:
+
+```java
+String token = jwtUtil.generateToken(user.getId(), user.getEmail());
+
+return new LoginResponse(
+        token,
+        user.getEmail(),
+        user.getFullName()
+);
+```
+
+LoginResponse:
+
+```java
+public record LoginResponse(
+        String token,
+        String email,
+        String fullName
+) {}
+```
+
+---
+
+# ✅ STEP 6 — Update Axios
+
+Replace your axios file with:
+
+```ts
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+api.interceptors.request.use((config) => {
+  const auth = localStorage.getItem("auth");
+
+  if (auth) {
+    const parsed = JSON.parse(auth);
+    if (parsed.token) {
+      config.headers.Authorization = `Bearer ${parsed.token}`;
+    }
+  }
+
+  return config;
+});
+
+export default api;
+```
+
+---
+
+# ✅ STEP 7 — Update Auth Storage
+
+Update your AuthUser:
+
+```ts
+export interface AuthUser {
+  token: string;
+  email: string;
+  fullName: string;
+}
+```
+
+When login succeeds:
+
+```ts
+const data = await login(email, password);
+
+saveAuth(data); // data must include token
+```
+
+---
+
+# ✅ STEP 8 — Fix startExam
+
+Now this works correctly:
+
+```java
+Authentication auth = SecurityContextHolder
+        .getContext()
+        .getAuthentication();
+
+UUID userId = (UUID) auth.getPrincipal();
+```
+
+No more anonymousUser.
+
+---
+
+# 🚀 RESULT
+
+Now you have:
+
+* Real JWT
+* Secured endpoints
+* Proper SecurityContext
+* Real authenticated user
+* Production-ready architecture
+
+---
+
+# 🔥 After This
+
+Your flow will be:
+
+Login → JWT issued
+Frontend stores token
+Axios sends Bearer token
+JwtFilter validates
+SecurityContext populated
+ExamService receives real UUID
+
+---
+
+If anything throws error after this, paste it.
+
+We’re now in real production mode.
