@@ -1,4 +1,4 @@
-3️⃣ ❌ What this line means (VERY IMPORTANT)
+What this line means (VERY IMPORTANT)
 
 ❌ Use AuthorEntity + authors table to store EXAM_USER
 
