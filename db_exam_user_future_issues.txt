@@ -1,6 +1,6 @@
 What this line means (VERY IMPORTANT)
 
-❌ Use AuthorEntity + authors table to store EXAM_USER
+Use AuthorEntity + authors table to store EXAM_USER
 
 Why this is a warning, not an error
 
