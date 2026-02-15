@@ -21,8 +21,8 @@ Early stage products
 MVPs
 
 Platforms like yours
-
-❌ It becomes a problem ONLY IF:
+ 
+It becomes a problem ONLY IF:
 
 EXAM_USER has completely different fields
 
