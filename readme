@@ -83,7 +83,8 @@ SELECT * FROM options;
 
 
 
-✅ 1.1 Database Tables (NEW)
+
+1 Database Tables (NEW)
 subjects
 CREATE TABLE subjects (
   id BIGSERIAL PRIMARY KEY,
