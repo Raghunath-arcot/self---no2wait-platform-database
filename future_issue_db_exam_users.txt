@@ -4,7 +4,6 @@ Your frontend is completely fine.
 
 This error is **100% backend + database design issue**.
 
----
 
 # 🚨 Why You’re Getting This Error
 
