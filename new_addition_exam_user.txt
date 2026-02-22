@@ -15,7 +15,6 @@ And that means **we must consciously cross the MVP boundary** you earlier asked 
 So first: **you’re not wrong**.
 Second: **this is the exact right time to do it**, *but it must be done cleanly and minimally*.
 
----
 
 ## 🚦 Reality Check (Important)
 
