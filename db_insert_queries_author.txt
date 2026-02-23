@@ -9,7 +9,7 @@ Biology	Zoology, Botany, Genetics	Animals, Plants, DNA, Evolution
 Mathematics	Algebra, Calculus, Geometry	Linear, Differential, Trigonometry, Euclidean
 Programming Languages	Java, Python, C++	Basics, Advanced, OOP, Data Structures
 🔹 SQL Insert Queries
-1️⃣ Insert Subjects
+Insert Subjects
 INSERT INTO subjects (name) VALUES
 ('Physics'),
 ('Computer Science'),
