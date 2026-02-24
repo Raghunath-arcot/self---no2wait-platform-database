@@ -1,6 +1,6 @@
 
 DATABASE MIGRATION DOCUMENT
-===========================
+
 
 CURRENT STATE (AS-IS)
 --------------------
