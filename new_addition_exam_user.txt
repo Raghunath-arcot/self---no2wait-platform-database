@@ -16,8 +16,7 @@ So first: **you’re not wrong**.
 Second: **this is the exact right time to do it**, *but it must be done cleanly and minimally*.
 
 
-## 🚦 Reality Check (Important)
-
+## 
 Your current backend **does NOT have**:
 
 * exams table
