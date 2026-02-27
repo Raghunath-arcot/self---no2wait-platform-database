@@ -5,7 +5,7 @@ Hire Talent --> Assess Candidates, Skill-Based Hiring, Company Dashboards, Campu
 Managed Services (MGD) --> Technology Services, Functional Services, Finance Services, Proctoring Services, Custom Talent Programs
 Product & Updates --> New Features, Product Roadmap, Release Notes, Case Studies, Blog / Insights
 DATABASE
-CREATE DATABASE n2w_db;
+CREATE DATABASE n2w_db;l
 
 CONNECT
 \c n2w_db;
