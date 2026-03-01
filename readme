@@ -112,7 +112,7 @@ CREATE TABLE subcategories (
   UNIQUE (name, category_id)
 );
 
-✅ 1.2 Update questions table (IMPORTANT)
+ Update questions table (IMPORTANT)
 ALTER TABLE questions
 ADD COLUMN subcategory_id BIGINT NOT NULL,
 ADD CONSTRAINT fk_question_subcategory
