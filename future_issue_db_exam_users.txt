@@ -5,9 +5,9 @@ Your frontend is completely fine.
 This error is **100% backend + database design issue**.
 
 
-# 🚨 Why You’re Getting This Error
+Why You’re Getting This Error
 
-```
+
 violates foreign key constraint "fk_exam_user"
 Key (exam_user_id) = (ad5ab46b-c082-4d7d-99b2-3707fa87f659)
 is not present in table "exam_users"
