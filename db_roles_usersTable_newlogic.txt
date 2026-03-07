@@ -1,7 +1,6 @@
 
 
 You currently have:
-
 * `authors`
 * `exam_users`
 * Separate identity tables
@@ -16,9 +15,7 @@ You want:
 
 That is possible.
 
----
-
-# ✅ Clean Solution (Without Renaming Tables)
+---an Solution (Without Renaming Tables)
 
 We will:
 
