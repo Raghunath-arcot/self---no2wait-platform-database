@@ -1,4 +1,4 @@
-Perfect ✅ — we’ll do this the **correct production way**.
+— we’ll do this the **correct production way**.
 
 You currently have:
 
