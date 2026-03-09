@@ -1,5 +1,3 @@
-— we’ll do this the **correct production way**.
-
 You currently have:
 
 * Public backend
