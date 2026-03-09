@@ -28,5 +28,4 @@ EXAM_USER has completely different fields
 
 Or millions of users + performance issues
 
-for now: THIS IS 100% CORRECT
 
