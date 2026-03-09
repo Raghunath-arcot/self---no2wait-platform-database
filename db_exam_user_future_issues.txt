@@ -14,7 +14,6 @@ This is called:
 
 Single Table Inheritance (Role-based users)
 
-✔ This is GOOD for:
 
 Early stage products
 
