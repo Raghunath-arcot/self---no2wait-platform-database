@@ -58,7 +58,7 @@ This becomes your **single login identity table**.
 
 STEP 2 — Modify Existing Tables (Minimal Change)
 
-### 🔹 Modify `authors`
+Modify `authors`
 
 ```sql
 ALTER TABLE authors
