@@ -26,9 +26,7 @@ We will:
 
 This avoids breaking your current services.
 
----
-
-# 🧠 Industry Pattern (Bridge Identity Pattern)
+Industry Pattern (Bridge Identity Pattern)
 
 Many platforms started like this and evolved gradually. Think early-stage systems like:
 
