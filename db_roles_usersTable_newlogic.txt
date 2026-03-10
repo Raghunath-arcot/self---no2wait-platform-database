@@ -39,7 +39,7 @@ We’ll do the same.
 
 ---
 
-# 🏗 STEP 1 — Add a Core `users` Table
+ STEP 1 — Add a Core `users` Table
 
 ```sql
 CREATE TABLE users (
