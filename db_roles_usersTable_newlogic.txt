@@ -19,8 +19,8 @@ That is possible.
 
 We will:
 
-1. Keep `authors` table ✅
-2. Keep `exam_users` table ✅
+1. Keep `authors` table 
+2. Keep `exam_users` table 
 3. Introduce ONE new table → `users` (identity bridge)
 4. Slightly modify both existing tables
 
