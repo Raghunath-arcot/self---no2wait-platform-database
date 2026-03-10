@@ -76,7 +76,7 @@ Now:
 
 ---
 
-### 🔹 Modify `exam_users`
+Modify `exam_users`
 
 ```sql
 ALTER TABLE exam_users
