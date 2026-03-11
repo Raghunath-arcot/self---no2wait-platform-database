@@ -17,7 +17,7 @@ That is possible.
 
 ---an Solution (Without Renaming Tables)
 
-We will:
+
 
 1. Keep `authors` table 
 2. Keep `exam_users` table 
