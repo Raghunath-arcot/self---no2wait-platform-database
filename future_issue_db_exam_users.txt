@@ -17,7 +17,7 @@ That means:
 
 👉 You are inserting into `exam_attempts`
 👉 `exam_attempts.exam_user_id` has a FK to `exam_users.id`
-👉 But that UUID does NOT exist in `exam_users` table
+ But that UUID does NOT exist in `exam_users` table
 
 ---
 
