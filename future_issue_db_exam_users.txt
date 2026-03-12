@@ -16,7 +16,7 @@ is not present in table "exam_users"
 That means:
 
 👉 You are inserting into `exam_attempts`
-👉 `exam_attempts.exam_user_id` has a FK to `exam_users.id`
+ `exam_attempts.exam_user_id` has a FK to `exam_users.id`
  But that UUID does NOT exist in `exam_users` table
 
 ---
