@@ -21,7 +21,7 @@ That means:
 
 ---
 
-# 🔥 Why It Happens In Option 1
+Why It Happens In Option 1
 
 In Option 1 we did this:
 
