@@ -1,6 +1,5 @@
 
-
-You currently have:
+You currently have
 * `authors`
 * `exam_users`
 * Separate identity tables
