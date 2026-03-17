@@ -2,7 +2,7 @@
 DATABASE MIGRATION DOCUMENT
 
 
-CURRENT STATE (AS-IS)
+CURRENT STATE (AS-IS
 --------------------
 Tables present:
 - authors
