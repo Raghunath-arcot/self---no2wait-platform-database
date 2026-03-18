@@ -6,7 +6,6 @@ You currently have
 * Email uniqueness inside each table
 * Conflict when same email registers in both
 
-You want:
 
 > Same email should be able to be Author + Learner
 > WITHOUT rewriting entire backend
