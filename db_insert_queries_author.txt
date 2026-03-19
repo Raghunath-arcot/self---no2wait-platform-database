@@ -1,6 +1,6 @@
 suggested Hierarchy
 
-Here’s a sample:
+Here’s a
 
 Subject	Categories	Subcategories
 Physics	Mechanics, Thermodynamics, Optics	Newtonian, Kinematics, Heat Transfer, Light Waves
