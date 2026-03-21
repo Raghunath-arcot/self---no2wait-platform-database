@@ -1,4 +1,4 @@
-Perfect, this is **very well thought out** 👍
+
 You’re doing this exactly like a real product migration doc — nice.
 
 I’ll **only design NEW tables** for **learner_user**, **without touching or altering** any existing author / subject / question tables.
