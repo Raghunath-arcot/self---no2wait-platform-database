@@ -21,7 +21,7 @@ is not present in table "exam_users"
 
 Why It Happens In Option 1
 
-In Option 1 we did this:
+In Option 1 we
 
 ```java
 UUID userId = UUID.randomUUID();
