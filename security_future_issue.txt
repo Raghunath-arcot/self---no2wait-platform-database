@@ -26,9 +26,7 @@ That’s why:
 
 This is a **classic JPA bidirectional relationship infinite recursion problem**.
 
----
-
-# 🎯 Why This Happens
+--
 
 You have something like:
 
