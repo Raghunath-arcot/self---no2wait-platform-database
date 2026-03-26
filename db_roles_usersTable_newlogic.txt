@@ -13,7 +13,8 @@ You currently have
 
 That is possible.
 
----an Solution (Without Renaming
+---an Solution (Without Renaming)
+
 
 
 
@@ -71,8 +72,6 @@ Now:
 
 * `authors` no longer owns email/password
 * It references `users`
-
----
 
 Modify `exam_users`
 
