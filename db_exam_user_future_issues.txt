@@ -14,7 +14,7 @@ This is called:
 
 Single Table Inheritance (Role-based users)
 
-
+-----
 Early stage products
 
 MVPs
